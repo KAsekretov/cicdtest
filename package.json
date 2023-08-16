@@ -9,7 +9,11 @@
         "@sap/cds": "^7",
         "@sap/cds-hana": "^2",
         "@sap/hana-client": "^2.17.22",
-        "express": "^4"
+        "express": "^4",
+        "@sap/audit-logging": "^5.0.0",
+        "@sap/xsenv": "^3.1.0",
+        "@sap/xssec": "^3.2.0",
+        "passport": "^0.4.1"
     },
     "devDependencies": {
         "@cap-js/sqlite": "^1",
@@ -26,20 +30,12 @@
         "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
     },
     "cds": {
-        "build": {
-            "tasks": [
-                {
-                    "for": "hana",
-                    "dest": "../db"
-                },
-                {
-                    "for": "node-cf"
-                }
-            ]
-        },
         "requires": {
             "db": {
                 "kind": "hana-cloud"
+            },
+            "uaa": {
+                "kind": "xsuaa"
             }
         },
         "hana": {

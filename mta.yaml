@@ -5,23 +5,31 @@ version: 1.0.0
 modules:
 - name: DI84-srv
   type: nodejs
-  path: gen/srv
+  path: srv
   requires:
   - name: DI84-db
+  - name: uaa_DI84
   provides:
-  - name: srv-api
+  - name: DI84-api
     properties:
       srv-url: ${default-url}
   parameters:
+    host: ${appname}
     buildpack: nodejs_buildpack
   build-parameters:
+    ignore: [".env", "./node_modules"]
     builder: npm
+  properties:
+    CORS:
+      - allowedOrigin:
+        - host: '*'
 - name: DI84-db-deployer
   type: hdb
   path: db
   requires:
   - name: DI84-db
   parameters:
+    ignore: [".env", "./node_modules"]
     buildpack: nodejs_buildpack
 - name: DI84-destination-content
   type: com.sap.application.content
@@ -85,6 +93,8 @@ resources:
     service-plan: hdi-shared
 - name: DI84-destination-service
   type: org.cloudfoundry.managed-service
+  requires:
+    - name: DI84-api
   parameters:
     config:
       HTML5Runtime_enabled: true
@@ -96,6 +106,14 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Name: srv-api
+            Authentication: NoAuthentication
+            ProxyType: Internet
+            HTML5.ForwardAuthToken: true
+            HTML5.DynamicDestination: true
+            Type: HTTP
+            URL: ~{DI84-api/srv-url}
+            URL.headers.Access-Control-Allow-Origin: '*'
           existing_destinations_policy: update
       version: 1.0.0
     service: destination
@@ -117,6 +135,7 @@ resources:
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true
+  appname: my-cool-app-001
 build-parameters:
   before-all:
   - builder: custom
