@@ -1,53 +1,52 @@
 {
-    "name": "DI84",
-    "version": "1.0.0",
-    "description": "A simple CAP project.",
-    "repository": "<Add your repository here>",
-    "license": "UNLICENSED",
-    "private": true,
-    "engines": {
-        "node": "^18",
-        "npm": "9.5.1"
+  "name": "sap.ui.demo.todo",
+  "version": "0.0.1",
+  "description": "Sample of an OpenUI5 app",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": "^18",
+    "npm": "9.5.1"
+  },
+  "dependencies": {
+    "@sap/cds": "^7",
+    "@sap/cds-hana": "^2",
+    "@sap/hana-client": "^2.17.22",
+    "express": "^4",
+    "@sap/audit-logging": "^5.0.0",
+    "@sap/xsenv": "^3.1.0",
+    "@sap/xssec": "^3.2.0",
+    "passport": "^0.4.1"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7",
+    "@sap/hdi-deploy": "4.8.0",
+    "@sap/ux-specification": "^1.108.11",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch-frontend": "cds watch --open frontend/webapp/index.html?sap-ui-xx-viewCache=false",
+    "undeploy": "cf undeploy DI84 --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
+  },
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana-cloud"
       },
-    "dependencies": {
-        "@sap/cds": "^7",
-        "@sap/cds-hana": "^2",
-        "@sap/hana-client": "^2.17.22",
-        "express": "^4",
-        "@sap/audit-logging": "^5.0.0",
-        "@sap/xsenv": "^3.1.0",
-        "@sap/xssec": "^3.2.0",
-        "passport": "^0.4.1"
+      "uaa": {
+        "kind": "xsuaa"
+      }
     },
-    "devDependencies": {
-        "@cap-js/sqlite": "^1",
-        "@sap/cds-dk": "^7",
-        "@sap/hdi-deploy": "4.8.0",
-        "@sap/ux-specification": "^1.108.11",
-        "rimraf": "^3.0.2"
-    },
-    "scripts": {
-        "start": "cds-serve",
-        "watch-frontend": "cds watch --open frontend/webapp/index.html?sap-ui-xx-viewCache=false",
-        "undeploy": "cf undeploy DI84 --delete-services --delete-service-keys --delete-service-brokers",
-        "build": "rimraf resources mta_archives && mbt build --mtar archive",
-        "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
-    },
-    "cds": {
-        "requires": {
-            "db": {
-                "kind": "hana-cloud"
-            },
-            "uaa": {
-                "kind": "xsuaa"
-            }
-        },
-        "hana": {
-            "deploy-format": "hdbtable"
-        }
-    },
-    "sapux": [
-        "app/frontend",
-        "app/frontend"
-    ]
+    "hana": {
+      "deploy-format": "hdbtable"
+    }
+  },
+  "sapux": [
+    "app/frontend",
+    "app/frontend"
+  ]
 }
